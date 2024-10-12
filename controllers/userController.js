@@ -5,7 +5,7 @@ exports.createUser = async (req, res) => {
     try {
         const user = await User.create(req.body);
         res.status(201).json({ 
-            message: 'User successfully created', 
+            message: 'A User successfully created', 
             user: user 
         });
     } catch (error) {
@@ -53,7 +53,7 @@ exports.updateUser = async (req, res) => {
 exports.deleteUser = async (req, res) => {
     try {
         await User.destroy({ where: { user_id: req.params.id } });
-        res.status(200).json({ message: 'User deleted' });
+        res.json({ message: `A User (ID: ${req.params.id}) deleted` }); 
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

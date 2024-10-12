@@ -1,17 +1,38 @@
 const Destination = require('../models/Destination');
+const Trip = require('../models/Trip');
 
 //create
 exports.createDestination = async (req, res) => {
     try {
-        const destination = await Destination.create(req.body);
-        res.status(201).json({ 
-            message: 'A Destination successfully created', 
-            destination: destination 
+        const trip = await Trip.findByPk(req.params.trip_id);
+        if (!trip) return res.status(404).json({ error: 'Trip not found' });
+
+        const destination = await Destination.create({
+            ...req.body,
+            trip_id: req.params.trip_id
         });
+
+        res.status(201).json({ message: 'A Destination successfully created', destination });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 };
+
+// exports.createDestination = async (req, res) => {
+//     try {
+//         const trip = await Trip.findByPk(req.params.trip_id);
+//         if (!trip) {
+//             return res.status(404).json({ error: 'Trip not found' });
+//         }
+//         const destination = await Destination.create(req.body);
+//         res.status(201).json({ 
+//             message: 'A Destination successfully created', 
+//             destination: destination,
+//         });
+//     } catch (error) {
+//         res.status(400).json({ error: error.message });
+//     }
+// };
 
 //get all
 exports.getAllDestinations = async (req, res) => {
@@ -58,7 +79,7 @@ exports.deleteDestination = async (req, res) => {
             return res.status(404).json({ message: 'Destination not found' });
         }
         await destination.destroy();
-        res.json({ message: 'A Destination deleted' });
+        res.json({ message: `A Destination (ID: ${req.params.id}) deleted` }); 
     } catch (error) {
         res.status(400).json({ error: error.message });
     }

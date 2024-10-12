@@ -1,12 +1,18 @@
 const Trip = require('../models/Trip');
+const User = require('../models/User');
 
-//create
+//create a trip for spcific user
 exports.createTrip = async (req, res) => {
     try {
-        const trip = await Trip.create(req.body);
+        const user = await User.findByPk(req.params.user_id);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        const tripUser = await user.createTrip(req.body);
+        //const trip = await Trip.create(req.body);
         res.status(201).json({ 
             message: 'A Trip successfully created', 
-            trip: trip 
+            tripUser: tripUser
         });
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -58,7 +64,7 @@ exports.deleteTrip = async (req, res) => {
             return res.status(404).json({ message: 'Trip not found' });
         }
         await trip.destroy();
-        res.json({ message: 'A Trip deleted' });
+        res.json({ message: `A Trip (ID: ${req.params.id}) deleted` }); 
     } catch (error) {
         res.status(400).json({ error: error.message });
     }

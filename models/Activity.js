@@ -30,6 +30,6 @@ const Activity = sequelize.define('Activity', {
 });
 
 Destination.hasMany(Activity, { foreignKey: 'destination_id' });
-Activity.belongsTo(Destination, { foreignKey: 'destination_id' });
+Activity.belongsTo(Destination, { foreignKey: 'destination_id', onDelete: 'CASCADE' });
 
 module.exports = Activity;

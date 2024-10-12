@@ -24,7 +24,7 @@ const Booking = sequelize.define('Booking', {
     }
 });
 
-Booking.belongsTo(Trip, {foreignKey: 'trip_id'});
+Booking.belongsTo(Trip, {foreignKey: 'trip_id', onDelete: 'CASCADE'});
 Trip.hasMany(Booking, {foreignKey: 'trip_id'});
 
 module.exports = Booking;

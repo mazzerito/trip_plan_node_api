@@ -24,6 +24,5 @@ const Destination = sequelize.define('Destination', {
 });
 
 Trip.hasMany(Destination, { foreignKey: 'trip_id' });
-Destination.belongsTo(Trip, { foreignKey: 'trip_id' });
-
+Destination.belongsTo(Trip, { foreignKey: 'trip_id', onDelete: 'CASCADE' });
 module.exports = Destination;

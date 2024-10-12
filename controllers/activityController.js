@@ -1,13 +1,17 @@
 const Activity = require('../models/Activity');
+const Destination = require('../models/Destination');
 
 //create  
 exports.createActivity = async (req, res) => {
     try {
-        const activity = await Activity.create(req.body);
-        res.status(201).json({ 
-            message: 'An Activity successfully created', 
-            activity: activity 
-        });
+        const destination = await Destination.findByPk(req.params.destination_id); // Corrected to find Destination
+        if (!destination) return res.status(404).json({ error: 'Destination not found' });
+
+        const activity = await Activity.create({ 
+            ...req.body, 
+            destination_id: destination.destination_id }); // Associate the activity with the destination
+
+        res.status(201).json({ message: 'An Activity successfully created', activity });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
@@ -58,7 +62,8 @@ exports.deleteActivity = async (req, res) => {
             return res.status(404).json({ message: 'Activity not found' });
         }
         await activity.destroy();
-        res.json({ message: 'An Activity deleted' });
+        res.json({ message: `A Activity (ID: ${req.params.id}) deleted` });
+        //res.json({ message: 'An Activity deleted' });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }

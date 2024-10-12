@@ -1,17 +1,41 @@
 const Booking = require('../models/Booking');
+const Trip = require('../models/Trip');
 
 //create
+//create specific booking
 exports.createBooking = async (req, res) => {
     try {
-        const booking = await Booking.create(req.body);
-        res.status(201).json({ 
-            message: 'A Booking successfully created', 
-            booking: booking 
+        const trip = await Trip.findByPk(req.params.trip_id);
+        if (!trip) return res.status(404).json({ message: 'Trip not found' });
+
+        const newBooking = await Booking.create({
+            ...req.body,
+            trip_id: req.params.trip_id // Associate booking with the trip
         });
+
+        res.status(201).json({ message: 'A Booking successfully created', newBooking }); // Respond with the newly created booking
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(500).json({ error: error.message });
     }
 };
+// exports.createBooking = async (req, res) => {
+//     try {
+//         const trip = await Trip.findByPk(req.params.trip_id);
+//         if (!trip) {
+//             return res.status(404).json({ error: 'Trip not found' });
+//         }
+//         const tripBooking = await Trip.createBooking(req.body);
+//         //const booking = await Booking.create(req.body);
+//         res.status(201).json({ 
+//             message: 'A Booking successfully created', 
+//             //booking: booking,
+//             tripBooking: tripBooking
+//         });
+//     } catch (error) {
+//         res.status(400).json({ error: error.message });
+//     }
+// };
+
 
 //get all
 exports.getAllBookings = async (req, res) => {
@@ -58,7 +82,7 @@ exports.deleteBooking = async (req, res) => {
             return res.status(404).json({ message: 'Booking not found' });
         }
         await booking.destroy();
-        res.json({ message: 'A Booking deleted' });
+        res.json({ message: `A Booking (ID: ${req.params.id}) deleted` });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }

@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 const User = require('./User');
+const Booking = require('./Booking');
 
 const Trip = sequelize.define('Trip', {
     trip_id: {
@@ -32,7 +33,7 @@ const Trip = sequelize.define('Trip', {
 });
 
 User.hasMany(Trip, { foreignKey: 'user_id' });
-Trip.belongsTo(User, { foreignKey: 'user_id' });
+Trip.belongsTo(User, { foreignKey: 'user_id' , onDelete: 'CASCADE'});
 
 
 module.exports = Trip;
