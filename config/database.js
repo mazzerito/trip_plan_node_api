@@ -1,9 +1,9 @@
 const { Sequelize } = require("sequelize");
 
 // For PostgreSQL or MySQL:
-const sequelize = new Sequelize("workout_api_db", "workout", "MkyxU5Ww6rh1Nguzciso9iwaZ0M4ozC0", {
-    host: "dpg-cs37use8ii6s738i2ns0-a",
-    dialect: "postgres", // or 'mysql'
+const sequelize = new Sequelize("trip_plan_api_db", "postgres", "150202", {
+    host: "localhost",
+    dialect: "postgres", 
 });
 
 module.exports = sequelize;
